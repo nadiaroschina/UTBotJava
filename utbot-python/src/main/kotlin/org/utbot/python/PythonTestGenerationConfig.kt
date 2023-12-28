@@ -32,6 +32,7 @@ class PythonTestGenerationConfig(
     val coverageOutputFormat: CoverageOutputFormat = CoverageOutputFormat.Lines,
     val prohibitedExceptions: List<String> = defaultProhibitedExceptions,
     val doNotGenerateStateAssertions: Boolean = false,
+    val mockFunctions: List<String> = emptyList()
 ) {
     companion object {
         val defaultProhibitedExceptions: List<String> = listOf(

@@ -39,7 +39,8 @@ class PythonCodeGenerator(
     runtimeExceptionTestsBehaviour: RuntimeExceptionTestsBehaviour = RuntimeExceptionTestsBehaviour.defaultItem,
     hangingTestsTimeout: HangingTestsTimeout = HangingTestsTimeout(),
     enableTestsTimeout: Boolean = true,
-    testClassPackageName: String = classUnderTest.packageName
+    testClassPackageName: String = classUnderTest.packageName,
+    mockMethodsNames: List<String> = emptyList(),
 ) : CodeGenerator(
     CodeGeneratorParams(
         classUnderTest = classUnderTest,
@@ -57,17 +58,20 @@ class PythonCodeGenerator(
         enableTestsTimeout = enableTestsTimeout,
         testClassPackageName = testClassPackageName,
         cgLanguageAssistant = PythonCgLanguageAssistant,
+        mockMethodsNames = mockMethodsNames
     )
 ) {
     fun pythonGenerateAsStringWithTestReport(
         cgTestSets: List<CgMethodTestSet>,
         importModules: Set<PythonImport>,
         testClassCustomName: String? = null,
+        mockMethodsNames: List<String>? = null
     ): CodeGeneratorResult = withCustomContext(testClassCustomName) {
         context.withTestClassFileScope {
             (context.cgLanguageAssistant as PythonCgLanguageAssistant).clear()
             val testClassModel = SimpleTestClassModel(classUnderTest, cgTestSets)
             context.collectedImports.addAll(importModules)
+            mockMethodsNames?.let { context.mockMethodNames = it }
 
             val astConstructor = PythonCgTestClassConstructor(context)
             val renderer = CgAbstractRenderer.makeRenderer(context)

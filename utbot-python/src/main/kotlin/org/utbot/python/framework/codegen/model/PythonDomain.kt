@@ -72,6 +72,7 @@ object Unittest : TestFramework(displayName = "Unittest", id = "Unittest") {
     override val argListClassId: ClassId = pythonAnyClassId
 
     val skipDecoratorClassId = PythonClassId("unittest.skip")
+    val mockClassId = PythonClassId("mock.patch")
 
     override fun getRunTestsCommand(
         executionInvoke: String,

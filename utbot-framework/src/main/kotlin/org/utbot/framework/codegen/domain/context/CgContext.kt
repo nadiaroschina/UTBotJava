@@ -132,6 +132,8 @@ interface CgContextOwner {
 
     val forceStaticMocking: ForceStaticMocking
 
+    val mockMethodNames: List<String>
+
     val generateWarningsForStaticMocking: Boolean
 
     val codegenLanguage: CodegenLanguage
@@ -482,6 +484,7 @@ class CgContext(
     override val mockFramework: MockFramework,
     override val staticsMocking: StaticsMocking,
     override val forceStaticMocking: ForceStaticMocking,
+    override var mockMethodNames: List<String> = emptyList(),
     override val generateWarningsForStaticMocking: Boolean,
     override val codegenLanguage: CodegenLanguage = CodegenLanguage.defaultItem,
     override val cgLanguageAssistant: CgLanguageAssistant,
@@ -676,6 +679,7 @@ class CgContext(
         mockFramework = this.mockFramework,
         staticsMocking = this.staticsMocking,
         forceStaticMocking = this.forceStaticMocking,
+        mockMethodNames = this.mockMethodNames,
         generateWarningsForStaticMocking = this.generateWarningsForStaticMocking,
         codegenLanguage = this.codegenLanguage,
         cgLanguageAssistant = this.cgLanguageAssistant,

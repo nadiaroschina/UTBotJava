@@ -30,4 +30,5 @@ data class CodeGeneratorParams(
     val hangingTestsTimeout: HangingTestsTimeout = HangingTestsTimeout(),
     val enableTestsTimeout: Boolean = true,
     val testClassPackageName: String = classUnderTest.packageName,
+    val mockMethodsNames: List<String> = emptyList()
 )

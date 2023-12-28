@@ -235,6 +235,11 @@ object PythonDialogProcessor {
         }.executeSynchronously() ?: emptySet()
     }
 
+
+    private fun getMockNames(): List<String> = listOf(
+        "random.randint", "time.time"
+    )
+
     private fun createTests(project: Project, baseModel: PythonTestsModel) {
         ProgressManager.getInstance().run(object : Backgroundable(project, "Generate python tests") {
             override fun run(indicator: ProgressIndicator) {
@@ -264,6 +269,7 @@ object PythonDialogProcessor {
                         localUpdateIndicator(ProgressRange.ANALYZE, "Analyze code: read files", 0.1)
 
                         val methods = findSelectedPythonMethods(model)
+                        val mockNames = getMockNames()
                         val content = getContentFromPyFile(model.file)
 
                         val config = PythonTestGenerationConfig(
@@ -277,7 +283,8 @@ object PythonDialogProcessor {
                             testSourceRootPath = Path(model.testSourceRootPath),
                             withMinimization = true,
                             isCanceled = { indicator.isCanceled },
-                            runtimeExceptionTestsBehaviour = model.runtimeExceptionTestsBehaviour
+                            runtimeExceptionTestsBehaviour = model.runtimeExceptionTestsBehaviour,
+                            mockFunctions = mockNames
                         )
                         val processor = PythonIntellijProcessor(
                             config,

@@ -8,7 +8,7 @@ import pickle
 import sys
 import traceback
 import types
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Tuple
 
 from utbot_executor.config import CoverageConfig
 from utbot_executor.deep_serialization.deep_serialization import (
@@ -25,6 +25,7 @@ from utbot_executor.deep_serialization.memory_objects import (
 )
 from utbot_executor.deep_serialization.utils import PythonId, getattr_by_path
 from utbot_executor.memory_compressor import compress_memory
+from utbot_executor.mock_wrapper import MockWrapper
 from utbot_executor.parser import (
     ExecutionRequest,
     ExecutionResponse,
@@ -91,14 +92,14 @@ class PythonExecutor:
                         logging.warning("Import submodule %s failed", submodule_name)
                 logging.debug("Submodule #%d: OK", i)
 
-    def run_function(self, request: ExecutionRequest) -> ExecutionResponse:
+    def run_function(self, request: ExecutionRequest, mock_functions_names: List[str]) -> ExecutionResponse:
         match request.memory_mode:
             case MemoryMode.PICKLE:
-                return self.run_pickle_function(request)
+                return self.run_pickle_function(request, mock_functions_names)
             case MemoryMode.REDUCE:
-                return self.run_reduce_function(request)
+                return self.run_reduce_function(request, mock_functions_names)
 
-    def run_reduce_function(self, request: ExecutionRequest) -> ExecutionResponse:
+    def run_reduce_function(self, request: ExecutionRequest, mock_functions_names: List[str]) -> ExecutionResponse:
         logging.debug("Prepare to run function `%s`", request.function_name)
         try:
             memory_dump = deserialize_memory_objects(request.serialized_memory)
@@ -139,6 +140,15 @@ class PythonExecutor:
                 for name, kwarg_id in request.kwarguments_ids.items()
             }
             logging.debug("Kwarguments: %s", kwargs)
+
+            wrapper = MockWrapper(
+                mock_funcs_with_values={
+                    name: 666
+                    for name in mock_functions_names
+                }
+            )
+            function = wrapper.wrap(function)
+
         except Exception as _:
             logging.debug("Error \n%s", traceback.format_exc())
             return ExecutionFailResponse("fail", traceback.format_exc())
@@ -176,7 +186,7 @@ class PythonExecutor:
         logging.debug("Value have been calculated: %s", value)
         return value
 
-    def run_pickle_function(self, request: ExecutionRequest) -> ExecutionResponse:
+    def run_pickle_function(self, request: ExecutionRequest, mock_functions_names: List[str]) -> ExecutionResponse:
         logging.debug("Prepare to run function `%s`", request.function_name)
         try:
             logging.debug("Imports: %s", request.imports)
@@ -210,6 +220,13 @@ class PythonExecutor:
                     error_message = f"Invalid self argument \n{type(args[0])} instead of {class_name}"
                     logging.debug(error_message)
                     return ExecutionFailResponse("fail", error_message)
+            wrapper = MockWrapper(
+                mock_funcs_with_values={
+                    name: 666
+                    for name in mock_functions_names
+                }
+            )
+            function = wrapper.wrap(function)
 
         except Exception as _:
             logging.debug("Error \n%s", traceback.format_exc())

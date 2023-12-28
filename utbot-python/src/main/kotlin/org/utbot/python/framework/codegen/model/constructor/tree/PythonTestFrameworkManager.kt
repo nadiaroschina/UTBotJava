@@ -18,11 +18,7 @@ import org.utbot.python.framework.api.python.util.pythonStrClassId
 import org.utbot.python.framework.codegen.model.Pytest
 import org.utbot.python.framework.codegen.model.Unittest
 import org.utbot.python.framework.codegen.model.constructor.util.importIfNeeded
-import org.utbot.python.framework.codegen.model.tree.CgPythonAssertEquals
-import org.utbot.python.framework.codegen.model.tree.CgPythonFunctionCall
-import org.utbot.python.framework.codegen.model.tree.CgPythonRepr
-import org.utbot.python.framework.codegen.model.tree.CgPythonTuple
-import org.utbot.python.framework.codegen.model.tree.CgPythonWith
+import org.utbot.python.framework.codegen.model.tree.*
 
 internal class PytestManager(context: CgContext) : TestFrameworkManager(context) {
     override fun expectException(exception: ClassId, block: () -> Unit) {
@@ -163,6 +159,32 @@ internal class UnittestManager(context: CgContext) : TestFrameworkManager(contex
             namedArguments = listOf(reasonArgument),
             target = Method,
         )
+    }
+
+    override fun addMockPatchAnnotation(methodName: String, returnValue: CgExpression) {
+
+        require(testFramework is Unittest) { "According to settings, Unittest was expected, but got: $testFramework" }
+
+        val targetArgument = CgNamedAnnotationArgument(
+            name = "target",
+            value = CgPythonRepr(pythonStrClassId, "'${methodName}'"),
+        )
+
+        val mockArgument = CgNamedAnnotationArgument(
+            name = "new",
+            value = CgPythonFunctionCall(
+                pythonNoneClassId,
+                "mock.MagicMock",
+                listOf(CgPythonNamedArgument("return_value", returnValue))
+            )
+        )
+
+        statementConstructor.addAnnotation(
+            classId = Unittest.mockClassId,
+            namedArguments = listOf(targetArgument, mockArgument),
+            target = Method,
+        )
+
     }
 
     fun assertIsinstance(types: List<PythonClassId>, actual: CgVariable) {

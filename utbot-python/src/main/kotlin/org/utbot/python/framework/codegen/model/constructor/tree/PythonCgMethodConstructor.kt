@@ -91,10 +91,10 @@ class PythonCgMethodConstructor(context: CgContext) : CgMethodConstructor(contex
                                         if (it.value is CgVariable) {
                                             it.value
                                         } else {
-                                            newVar(it.type) {it.value}
+                                            newVar(it.type) { it.value }
                                         }
                                     } else {
-                                        newVar(it.type) {it}
+                                        newVar(it.type) { it }
                                     }
                                 assertThisObject.add(Pair(newValue, afterThisInstance))
                                 newValue
@@ -116,7 +116,7 @@ class PythonCgMethodConstructor(context: CgContext) : CgMethodConstructor(contex
                         if (afterValue is PythonTreeModel && beforeValue is PythonTreeModel) {
                             if (diffIds.contains(afterValue.tree.id)) {
                                 if (argument !is CgVariable) {
-                                    argument = newVar(argument.type, name) {argument}
+                                    argument = newVar(argument.type, name) { argument }
                                 }
                                 stateAssertions[index] = Pair(argument, afterValue)
                             }
@@ -242,6 +242,16 @@ class PythonCgMethodConstructor(context: CgContext) : CgMethodConstructor(contex
                 "Disabled due to the fact that the execution is longer then ${hangingTestsTimeout.timeoutMs} ms"
             )
         }
+
+        val intValue = CgPythonRepr(pythonIntClassId,"666")
+        // val listValue = CgPythonList(
+        //     listOf(
+        //         CgPythonRepr(type = pythonStrClassId, content = "'line'"),
+        //         CgPythonRepr(type = pythonIntClassId, content = "118")
+        //     )
+        // )
+        context.mockMethodNames
+            .forEach { testFrameworkManager.addMockPatchAnnotation(it, intValue) }
 
         val testMethod = buildTestMethod {
             name = methodName

@@ -29,7 +29,8 @@ abstract class AbstractCodeGenerator(params: CodeGeneratorParams) {
             runtimeExceptionTestsBehaviour = runtimeExceptionTestsBehaviour,
             hangingTestsTimeout = hangingTestsTimeout,
             enableTestsTimeout = enableTestsTimeout,
-            testClassPackageName = testClassPackageName
+            testClassPackageName = testClassPackageName,
+            mockMethodNames = mockMethodsNames,
         )
     }
 

@@ -146,6 +146,7 @@ abstract class PythonTestGenerationProcessor {
                 testClassPackageName = "",
                 hangingTestsTimeout = HangingTestsTimeout(configuration.timeoutForRun),
                 runtimeExceptionTestsBehaviour = configuration.runtimeExceptionTestsBehaviour,
+                mockMethodsNames = configuration.mockFunctions,
             )
             codegen.context.existingVariableNames = codegen.context.existingVariableNames.addAll(collectedImports.flatMap { listOfNotNull(it.moduleName, it.rootModuleName, it.importName) })
             val testCode = codegen.pythonGenerateAsStringWithTestReport(

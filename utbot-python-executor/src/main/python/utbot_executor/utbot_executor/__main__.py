@@ -1,6 +1,8 @@
 import argparse
 import logging
 
+from typing import List
+
 from utbot_executor.config import Config, HostConfig, CoverageConfig, LoggingConfig
 from utbot_executor.listener import PythonExecuteServer
 from utbot_executor.utils import TraceMode
@@ -31,6 +33,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--send_coverage", action=argparse.BooleanOptionalAction)
     parser.add_argument("--generate_state_assertions", action=argparse.BooleanOptionalAction)
+    parser.add_argument(
+        "--mock_functions", nargs='*', default=[]
+    )
     args = parser.parse_args()
 
     loglevel = {
@@ -55,7 +60,8 @@ if __name__ == "__main__":
             HostConfig(args.coverage_hostname, args.coverage_port), trace_mode, args.send_coverage
         ),
         logging=LoggingConfig(args.logfile, loglevel),
-        state_assertions=args.generate_state_assertions
+        state_assertions=args.generate_state_assertions,
+        mock_functions_names=args.mock_functions
     )
 
     main(config)

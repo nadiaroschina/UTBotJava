@@ -5,6 +5,7 @@ import traceback
 
 from utbot_executor.config import Config
 from utbot_executor.deep_serialization.memory_objects import PythonSerializer
+from utbot_executor.parser import parse_request, serialize_response, ExecutionFailResponse
 from utbot_executor.executor import PythonExecutor
 from utbot_executor.parser import (
     parse_request,
@@ -24,6 +25,7 @@ class PythonExecuteServer:
             config.coverage,
             config.state_assertions,
         )
+        self.mock_functions_names = config.mock_functions_names
         self.config = config
 
     def run(self) -> None:
@@ -61,7 +63,7 @@ class PythonExecuteServer:
                 try:
                     request = parse_request(message_body.decode())
                     logging.debug("Parsed request: %s", request)
-                    response = self.executor.run_function(request)
+                    response = self.executor.run_function(request, self.mock_functions_names)
                 except Exception as ex:
                     logging.debug("Exception: %s", traceback.format_exc())
                     response = ExecutionFailResponse("fail", traceback.format_exc())

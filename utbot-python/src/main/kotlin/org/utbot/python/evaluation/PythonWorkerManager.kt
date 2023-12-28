@@ -1,7 +1,9 @@
 package org.utbot.python.evaluation
 
 import mu.KotlinLogging
+import org.apache.commons.lang3.ObjectUtils.Null
 import org.apache.logging.log4j.LogManager
+import org.junit.Test.None
 import org.utbot.framework.plugin.api.TimeoutException
 import org.utbot.python.FunctionArguments
 import org.utbot.python.PythonMethod
@@ -26,6 +28,7 @@ class PythonWorkerManager(
     private val coverageMeasureMode: PythonCoverageMode = PythonCoverageMode.Instructions,
     private val sendCoverageContinuously: Boolean = true,
     private val doNotGenerateStateAssertions: Boolean = false,
+    private val mockFunctions: List<String> = emptyList(),
     val pythonCodeExecutorConstructor: (PythonWorker) -> PythonCodeExecutor,
 ) {
     constructor(
@@ -86,7 +89,8 @@ class PythonWorkerManager(
                 "--coverage_type", coverageMeasureMode.toString(),  // "lines", "instructions"
                 sendCoverageContinuously.toSendCoverageContinuouslyString(),  // "--send_coverage", "--no-send_coverage"
                 doNotGenerateStateAssertions.toDoNotGenerateStateAssertionsString(), // "--generate_state_assertions", // "--no-generate_state_assertions"
-            )
+                "--mock_functions"
+            ) + mockFunctions
         )
         timeout = max(until - processStartTime, 0)
         if (this::workerSocket.isInitialized && !workerSocket.isClosed) {

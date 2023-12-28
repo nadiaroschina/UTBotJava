@@ -231,6 +231,8 @@ abstract class TestFrameworkManager(val context: CgContext)
 
     abstract fun disableTestMethod(reason: String)
 
+    open fun addMockPatchAnnotation(methodName: String, returnValue: CgExpression) {}
+
     /**
      * Adds @DisplayName annotation.
      *
