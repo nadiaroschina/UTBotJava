@@ -9,7 +9,6 @@ interface UtType {
 interface FunctionType: UtType {
     val arguments: List<UtType>
     val returnValue: UtType
-    // val moc
 }
 
 /*

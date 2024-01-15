@@ -33,6 +33,7 @@ import org.utbot.python.framework.api.python.PythonUtExecution
 import org.utbot.python.framework.api.python.util.pythonExceptionClassId
 import org.utbot.python.framework.api.python.util.pythonIntClassId
 import org.utbot.python.framework.api.python.util.pythonNoneClassId
+import org.utbot.python.framework.api.python.util.pythonStrClassId
 import org.utbot.python.framework.codegen.PythonCgLanguageAssistant
 import org.utbot.python.framework.codegen.model.constructor.util.importIfNeeded
 import org.utbot.python.framework.codegen.model.tree.CgPythonFunctionCall
@@ -91,10 +92,10 @@ class PythonCgMethodConstructor(context: CgContext) : CgMethodConstructor(contex
                                         if (it.value is CgVariable) {
                                             it.value
                                         } else {
-                                            newVar(it.type) { it.value }
+                                            newVar(it.type) {it.value}
                                         }
                                     } else {
-                                        newVar(it.type) { it }
+                                        newVar(it.type) {it}
                                     }
                                 assertThisObject.add(Pair(newValue, afterThisInstance))
                                 newValue
@@ -116,7 +117,7 @@ class PythonCgMethodConstructor(context: CgContext) : CgMethodConstructor(contex
                         if (afterValue is PythonTreeModel && beforeValue is PythonTreeModel) {
                             if (diffIds.contains(afterValue.tree.id)) {
                                 if (argument !is CgVariable) {
-                                    argument = newVar(argument.type, name) { argument }
+                                    argument = newVar(argument.type, name) {argument}
                                 }
                                 stateAssertions[index] = Pair(argument, afterValue)
                             }
@@ -244,12 +245,12 @@ class PythonCgMethodConstructor(context: CgContext) : CgMethodConstructor(contex
         }
 
         val intValue = CgPythonRepr(pythonIntClassId,"666")
-        // val listValue = CgPythonList(
-        //     listOf(
-        //         CgPythonRepr(type = pythonStrClassId, content = "'line'"),
-        //         CgPythonRepr(type = pythonIntClassId, content = "118")
-        //     )
-        // )
+        val listValue = CgPythonList(
+            listOf(
+                CgPythonRepr(type = pythonStrClassId, content = "'line'"),
+                CgPythonRepr(type = pythonIntClassId, content = "118")
+            )
+        )
         context.mockMethodNames
             .forEach { testFrameworkManager.addMockPatchAnnotation(it, intValue) }
 
