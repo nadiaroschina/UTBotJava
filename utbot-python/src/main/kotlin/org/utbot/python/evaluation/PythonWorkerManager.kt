@@ -43,6 +43,7 @@ class PythonWorkerManager(
         configuration.coverageMeasureMode,
         configuration.sendCoverageContinuously,
         configuration.doNotGenerateStateAssertions,
+        configuration.mockFunctions,
         {
             PythonCodeSocketExecutor(
                 method,
@@ -84,8 +85,10 @@ class PythonWorkerManager(
                 serverSocket.localPort.toString(),
                 coverageReceiver.address().first,
                 coverageReceiver.address().second,
-                "--logfile", logfile.absolutePath,
-                "--loglevel", logLevel,  // "DEBUG", "INFO", "WARNING", "ERROR"
+                "--logfile", "/Users/nadys/IdeaProjects/UTBotJava/utbot-python/nadia_logs.txt",
+                "--loglevel", "DEBUG",
+                // "--logfile", logfile.absolutePath,
+                //"--loglevel", logLevel,  // "DEBUG", "INFO", "WARNING", "ERROR"
                 "--coverage_type", coverageMeasureMode.toString(),  // "lines", "instructions"
                 sendCoverageContinuously.toSendCoverageContinuouslyString(),  // "--send_coverage", "--no-send_coverage"
                 doNotGenerateStateAssertions.toDoNotGenerateStateAssertionsString(), // "--generate_state_assertions", // "--no-generate_state_assertions"

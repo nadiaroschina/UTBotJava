@@ -77,8 +77,7 @@ class FuzzingEngine(
     private val mypyStorage: MypyInfoBuild,
     private val mypyReport: List<MypyReportLine>,
     val until: Long,
-    private val executionStorage: ExecutionStorage,
-    private val mockFunctions: List<String> = emptyList()
+    private val executionStorage: ExecutionStorage
 ) {
     private val cache = EvaluationCache()
 
@@ -168,8 +167,7 @@ class FuzzingEngine(
                     method,
                     serverSocket,
                     configuration,
-                    until,
-                    mockFunctions
+                    until
                 )
             } catch (_: TimeoutException) {
                 return@use

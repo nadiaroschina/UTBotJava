@@ -1,8 +1,6 @@
 import argparse
 import logging
 
-from typing import List
-
 from utbot_executor.config import Config, HostConfig, CoverageConfig, LoggingConfig
 from utbot_executor.listener import PythonExecuteServer
 from utbot_executor.utils import TraceMode

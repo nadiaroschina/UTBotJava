@@ -4,6 +4,7 @@ import org.utbot.framework.codegen.domain.context.CgContext
 import org.utbot.framework.codegen.domain.context.TestClassContext
 import org.utbot.framework.codegen.domain.models.AnnotationTarget.Method
 import org.utbot.framework.codegen.domain.models.CgEqualTo
+import org.utbot.framework.codegen.domain.models.CgExpression
 import org.utbot.framework.codegen.domain.models.CgLiteral
 import org.utbot.framework.codegen.domain.models.CgNamedAnnotationArgument
 import org.utbot.framework.codegen.domain.models.CgValue

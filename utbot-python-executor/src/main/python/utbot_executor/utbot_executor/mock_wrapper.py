@@ -24,8 +24,3 @@ class MockWrapper:
                 return f(*args, **kwargs)
 
         return wrapped_func
-
-
-class IntValueWrapper:
-    def __init__(self):
-        pass

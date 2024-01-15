@@ -1,5 +1,7 @@
 import dataclasses
 
+from typing import List
+
 from utbot_executor.utils import TraceMode
 
 
@@ -28,3 +30,4 @@ class Config:
     coverage: CoverageConfig
     logging: LoggingConfig
     state_assertions: bool
+    mock_functions_names: List[str]
